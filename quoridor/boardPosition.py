@@ -83,7 +83,7 @@ class BoardPosition:
         else:
             playerPos = self.black
             otherPos = self.white
-
+        
         if dir == "UP":
             # Check if white is not at top edge of the board AND
             # Check if there is no wall above
@@ -91,7 +91,7 @@ class BoardPosition:
                 not self.isThereWall(playerPos.row-1, playerPos.col, "H")):
                     # Check if other player is jumped
                     if (playerPos.col == otherPos.col
-                        and playerPos.row == otherPos.row-1 ):
+                        and playerPos.row == otherPos.row+1 ):
                         if (playerPos.row > 1):
                             playerPos.row -=2
                             if (not self.isBlackWinner()):
@@ -108,7 +108,7 @@ class BoardPosition:
                 not self.isThereWall(playerPos.row, playerPos.col, "H")):
                 # Check if other player is jumped
                 if (playerPos.col == otherPos.col
-                    and playerPos.row == otherPos.row+1):
+                    and playerPos.row == otherPos.row-1):
                     if (playerPos.row > 1):
                         playerPos.row += 2
                         if (not self.isWhiteWinner()):
@@ -159,72 +159,3 @@ class BoardPosition:
         else:
             return False
         
-"""                        
-                        if (player == "W" and self.white.col == self.black.col
-                            and self.white.row == self.black.row-1):
-                            self.white.row = self.white.row-2
-                            self.nextPlayer = self.switchPlayer(player)                                                            
-                        elif (player == "B" and self.white.col == self.black.col
-                            and self.white.row-1 == self.black.row):
-                            self.black.row = self.black.row-2
-                            if (not self.isBlackWinner()):
-                                self.nextPlayer = self.switchPlayer(player)
-                     
-                            if player == "W":
-                                self.white.row = self.white.row-1
-                                self.nextPlayer = self.switchPlayer(player)
-                            elif player == "B":
-                                self.black.row = self.black.row-1
-                                if (not self.isBlackWinner()):
-                                    self.nextPlayer = self.switchPlayer(player)
-"""
-"""                        
-                if (player == "W" and self.white.col == self.black.col
-                    and self.white.row == self.black.row+1):
-                    self.white.row = self.white.row+2
-                    if (not self.isWhiteWinner()):
-                        self.nextPlayer = self.switchPlayer(player)
-                elif (player == "B" and self.white.col == self.black.col
-                    and self.white.row+1 == self.black.row):
-                    self.black.row = self.black.row+2
-                    self.nextPlayer = self.switchPlayer(player)
-                   
-                else:
-                    # Regular move otherwise
-                    if player == "W":
-                        self.white.row = self.white.row+1
-                        if (not self.isWhiteWinner()):
-                            self.nextPlayer = self.switchPlayer(player)
-                    elif player == "B":
-                        self.black.row = self.black.row+1
-                        self.nextPlayer = self.switchPlayer(player)
-"""                     
-"""
-                        if (player == "W" and self.white.row == self.black.row
-                            and self.white.col == self.black.col+1):
-                            self.white.col = self.white.col-2
-                        elif (player == "B" and self.white.row == self.black.row
-                            and self.white.col+1 == self.black.col):
-                            self.black.col = self.black.col-2
-                        else:
-                            # Regular move otherwise
-                            if player == "W":
-                                self.white.col = self.white.col-1
-                            elif player == "B":
-                                self.black.col = self.black.col-1
-                        self.nextPlayer = self.switchPlayer(player)
-"""    
-"""
-                if (player == "W" and self.white.row == self.black.row
-                    and self.white.col == self.black.col-1):
-                    self.white.col = self.white.col+2
-                elif (player == "B" and self.white.row == self.black.row
-                    and self.white.col-1 == self.black.col):
-                    self.black.col = self.black.col+2
-                else:
-                    # Regular move otherwise
-                    if player == "W":
-                        self.white.col = self.white.col+1
-                    elif player == "B":
-                        self.black.col = self.black.col+1
-"""
