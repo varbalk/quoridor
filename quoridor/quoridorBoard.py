@@ -13,9 +13,10 @@ pygame.init()
 
 bgColor = (212, 212, 212)
 blackColor = (0, 0, 0)
+darkColor = (50, 50, 50)
 whiteColor = (255, 255, 255)
 wallColor = (77, 38, 0)
-lineColor = (0, 0, 0)
+lineColor = (50, 50, 50)
 tileColor = (255, 117, 26)
 tileColor2 = (255, 212, 128)
 tile_size = 50
@@ -49,15 +50,15 @@ def drawBoard(screen):
             pygame.draw.rect(screen, lineColor, 
                              [init_x + (tile_size + gap_size)*col, 
                               init_y + (tile_size + gap_size)*row, 
-                              tile_size, tile_size], 2)
+                              tile_size, tile_size], 1)
     
 def drawPlayer(screen, row, col, color):
-    if (color == "BLACK"):
+    if (color == "B"):
         pygame.draw.circle(screen, blackColor, 
                                  [init_x + (tile_size + gap_size)*col + tile_size//2, 
                                   init_y + (tile_size + gap_size)*row + tile_size//2], 
                                   player_size)
-    elif (color == "WHITE"):
+    elif (color == "W"):
         pygame.draw.circle(screen, whiteColor, 
                                  [init_x + (tile_size + gap_size)*col + tile_size//2, 
                                   init_y + (tile_size + gap_size)*row + tile_size//2], 
@@ -65,46 +66,55 @@ def drawPlayer(screen, row, col, color):
     
 def drawNextPlayerSquare(screen, row, col):
     pygame.draw.rect(screen, tileColor, 
-                     [init_x + (tile_size + gap_size)*col+2, 
-                      init_y + (tile_size + gap_size)*row+2, 
-                      tile_size-3, tile_size-3])
+                     [init_x + (tile_size + gap_size)*col+1, 
+                      init_y + (tile_size + gap_size)*row+1, 
+                      tile_size-2, tile_size-2])
 
     
-def drawWall(screen, wall):
+def drawWall(screen, wall, color):
     col = wall.column
     row = wall.row
     if (wall.direction == "V"):
-        pygame.draw.rect(screen, wallColor, 
+        pygame.draw.rect(screen, color, 
                          [init_x + tile_size*(col+1) + gap_size*col + 1,
                           init_y + (tile_size + gap_size)*row, 
-                          gap_size-1, 2*tile_size+ gap_size])
+                          gap_size-2, 2*tile_size+ gap_size])
     elif (wall.direction == "H"):
-        pygame.draw.rect(screen, wallColor, 
+        pygame.draw.rect(screen, color, 
                          [init_x + (tile_size + gap_size)*col,
                           init_y + tile_size*(row+1) + gap_size*row + 1, 
-                          2*tile_size+ gap_size, gap_size-1])
+                          2*tile_size+ gap_size, gap_size-2])
  
-def drawPosition(screen, boardPos):
+def drawPosition(screen, boardPos, mode):
     drawBoard(screen)
-    if (boardPos.nextPlayer == "W"):
-        drawNextPlayerSquare(screen, boardPos.white.row, boardPos.white.col)
-        if (boardPos.isWhiteWinner()):
-            displayText(screen, "Winner: WHITE")
-        else:
-            displayText(screen, "Next player: WHITE")        
-    elif (boardPos.nextPlayer =="B"):
-        drawNextPlayerSquare(screen, boardPos.black.row, boardPos.black.col)
-        if (boardPos.isBlackWinner()):
-            displayText(screen, "Winner: BLACK")
-        else: 
-            displayText(screen, "Next player: BLACK")
-    drawPlayer(screen, boardPos.white.row, boardPos.white.col, "WHITE")
-    drawPlayer(screen, boardPos.black.row, boardPos.black.col, "BLACK")
+    textToDisplay = ""
+    if mode == "MOVE":
+        drawNextPlayerSquare(screen, 
+                             boardPos.position[boardPos.nextPlayer].row, 
+                             boardPos.position[boardPos.nextPlayer].col)        
+    #elif mode == "WALL":
+    
+    if (boardPos.isWhiteWinner()):
+        textToDisplay = "Winner: WHITE"
+    elif boardPos.isBlackWinner():
+        textToDisplay = "Winner: BLACK"
+    elif boardPos.nextPlayer == "W" and mode == "MOVE":
+        textToDisplay = "Move for WHITE"
+    elif boardPos.nextPlayer == "W" and mode == "WALL":
+        textToDisplay = "Wall for WHITE"
+    elif boardPos.nextPlayer == "B" and mode == "MOVE":
+        textToDisplay = "Move for BLACK"
+    elif boardPos.nextPlayer == "B" and mode == "WALL":
+        textToDisplay = "Wall for BLACK"   
+    else:
+        textToDisplay = ""   
+    displayText(screen, textToDisplay)
+    drawPlayer(screen, boardPos.position['W'].row, boardPos.position['W'].col, 'W')
+    drawPlayer(screen, boardPos.position['B'].row, boardPos.position['B'].col, 'B')
     for wall in boardPos.walls:
         if (wall.isValidPosition()):        
-            drawWall(screen, wall)
-
-    
+            drawWall(screen, wall, wallColor)
+            
 
 screen = pygame.display.set_mode((display_width,display_height))
 pygame.display.set_caption('Quoridor')
@@ -113,31 +123,62 @@ boardPos = BoardPosition()
 #boardPos.addWall(wall1)
 #wall2 = WallPosition(3, 4, "H", "BLACK")
 #boardPos.addWall(wall2)
-drawPosition(screen, boardPos)
+drawPosition(screen, boardPos, "MOVE")
 
 clock = pygame.time.Clock()
 
 crashed = False
+mode = "MOVE"
+newWall = None
+colors = {'W': whiteColor, 'B': blackColor}
 while not crashed:
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             crashed = True
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
-                boardPos.movePlayer("UP")
-            elif event.key == pygame.K_DOWN:
-                boardPos.movePlayer("DOWN")
-            elif event.key == pygame.K_LEFT:
-                boardPos.movePlayer("LEFT")
-            elif event.key == pygame.K_RIGHT:
-                boardPos.movePlayer( "RIGHT")
-            drawPosition(screen, boardPos)
+            if mode == "MOVE":
+                if event.key == pygame.K_UP:
+                    boardPos.movePlayer("UP")
+                elif event.key == pygame.K_DOWN:
+                    boardPos.movePlayer("DOWN")
+                elif event.key == pygame.K_LEFT:
+                    boardPos.movePlayer("LEFT")
+                elif event.key == pygame.K_RIGHT:
+                    boardPos.movePlayer( "RIGHT")
+                elif event.key == pygame.K_w:
+                    mode = "WALL"
+                    initPosition = boardPos.position[boardPos.nextPlayer]
+                    newWall = WallPosition(initPosition.row, 
+                                           initPosition.col, 
+                                           "H", 
+                                           boardPos.nextPlayer)
+            elif mode == "WALL":
+#                if event.key == pygame.K_UP:
+#                    #boardPos.moveWall("UP")
+#                elif event.key == pygame.K_DOWN:
+#                    #boardPos.moveWall("DOWN")
+#                elif event.key == pygame.K_LEFT:
+#                   # boardPos.moveWall("LEFT")
+#                elif event.key == pygame.K_RIGHT:
+#                    #boardPos.moveWall( "RIGHT")
+                if event.key == pygame.K_f:
+                    if newWall.direction == 'H':
+                        newWall.direction = 'V'
+                    else:
+                        newWall.direction = 'H'
+                    mode = "WALL"
+                elif event.key == pygame.K_w:
+                    mode = "MOVE"
+                    newWall = None
+                    
+        # Draw the board position and the pending wall
+        drawPosition(screen, boardPos, mode)
+        if mode == "WALL":
+            drawWall(screen, newWall, colors[boardPos.nextPlayer])
 
         print(event)
 
     pygame.display.update()
-    #clock.tick(60)
     clock.tick(60)
 
 pygame.quit()

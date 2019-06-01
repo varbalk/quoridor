@@ -22,9 +22,8 @@ class BoardPosition:
     
     def __init__(self):
         self.walls = [];
-        self.white = Position(0,4)
-        self.black = Position(8,4)
-        self.nextPlayer = "W"
+        self.position = {'W': Position(0,4), 'B' : Position(8,4) }
+        self.nextPlayer = 'W'
     """    
     def printBoard(self):
         for row in range(9):
@@ -72,17 +71,18 @@ class BoardPosition:
     def movePlayer(self, dir):
         # No moves if there is already a winner
         if (self.isWhiteWinner() or self.isBlackWinner()):
-            return
+            return False
         
         player = self.nextPlayer
         playerPos = None
         otherPos = None
-        if (player == "W"):
-            playerPos = self.white
-            otherPos = self.black
+        moveSuccess = False
+        if (player == 'W'):
+            playerPos = self.position['W']
+            otherPos = self.position['B']
         else:
-            playerPos = self.black
-            otherPos = self.white
+            playerPos = self.position['B']
+            otherPos = self.position['W']
         
         if dir == "UP":
             # Check if white is not at top edge of the board AND
@@ -96,11 +96,13 @@ class BoardPosition:
                             playerPos.row -=2
                             if (not self.isBlackWinner()):
                                 self.nextPlayer = self.switchPlayer(player)
+                                moveSuccess = True
                     else:
                         # Regular move otherwise
                         playerPos.row -= 1
                         if (not self.isBlackWinner()):
                             self.nextPlayer = self.switchPlayer(player)
+                            moveSuccess = True
         elif dir == "DOWN":
             # Check if white is not at bottom edge of the board
             # Check if there is no wall below
@@ -113,11 +115,13 @@ class BoardPosition:
                         playerPos.row += 2
                         if (not self.isWhiteWinner()):
                             self.nextPlayer = self.switchPlayer(player)
+                            moveSuccess = True
                 else:
                     # Regular move otherwise
                     playerPos.row += 1                
                     if (not self.isWhiteWinner()):
                         self.nextPlayer = self.switchPlayer(player)
+                        moveSuccess = True
         elif dir == "LEFT":
             # Check if white is not at left edge of the board
             # Check if there is no wall on the left
@@ -129,9 +133,11 @@ class BoardPosition:
                     if (playerPos.col >1):
                         playerPos.col -= 2
                         self.nextPlayer = self.switchPlayer(player)
+                        moveSuccess = True
                 else: 
                     playerPos.col -= 1
                     self.nextPlayer = self.switchPlayer(player)
+                    moveSuccess = True
         elif dir == "RIGHT": 
             # Check if white is not at right edge of the board
             # Check if there is no wall on the right
@@ -143,18 +149,21 @@ class BoardPosition:
                     if (playerPos.col < 7):
                         playerPos.col += 2 
                         self.nextPlayer = self.switchPlayer(player)
+                        moveSuccess = True
                 else:
                     playerPos.col += 1
                     self.nextPlayer = self.switchPlayer(player)
+                    moveSuccess = True
+        return moveSuccess
 
     def isWhiteWinner(self):
-        if (self.white.row == 8): 
+        if (self.position['W'].row == 8): 
             return True
         else:
             return False
 
     def isBlackWinner(self):
-        if (self.black.row == 0): 
+        if (self.position['B'].row == 0): 
             return True
         else:
             return False
