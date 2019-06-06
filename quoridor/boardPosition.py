@@ -3,23 +3,13 @@
 Created on Tue Mar 12 19:46:53 2019
 
 @author: varbalk@gmail.com
-@author: daniel.varrok@gmail.com
+@author: daniel.varro@gmail.com
 """
 from position import Position
 
 class BoardPosition:
 
-    """    
-    whitePlayerRow = 0;
-    whitePlayerCol = 4;
-
-    blackPlayerRow = 8;
-    blackPlayerCol = 4;
-
-    whiteWalls = [];
-    blackWalls = [];
-    """
-    
+   
     def __init__(self):
         self.walls = [];
         self.position = {'W': Position(0,4), 'B' : Position(8,4) }
@@ -95,14 +85,12 @@ class BoardPosition:
                         if (playerPos.row > 1):
                             playerPos.row -=2
                             if (not self.isBlackWinner()):
-                                #self.nextPlayer = self.switchPlayer(player)
                                 self.switchPlayer()
                                 moveSuccess = True
                     else:
                         # Regular move otherwise
                         playerPos.row -= 1
                         if (not self.isBlackWinner()):
-                            #self.nextPlayer = self.switchPlayer(player)
                             self.switchPlayer()
                             moveSuccess = True
         elif dir == "DOWN":
@@ -116,14 +104,12 @@ class BoardPosition:
                     if (playerPos.row > 1):
                         playerPos.row += 2
                         if (not self.isWhiteWinner()):
-                            #self.nextPlayer = self.switchPlayer(player)
                             self.switchPlayer()
                             moveSuccess = True
                 else:
                     # Regular move otherwise
                     playerPos.row += 1                
                     if (not self.isWhiteWinner()):
-                        #self.nextPlayer = self.switchPlayer(player)
                         self.switchPlayer()
                         moveSuccess = True
         elif dir == "LEFT":
@@ -136,12 +122,10 @@ class BoardPosition:
                     and playerPos.col == otherPos.col+1):
                     if (playerPos.col >1):
                         playerPos.col -= 2
-                        #self.nextPlayer = self.switchPlayer(player)
                         self.switchPlayer()
                         moveSuccess = True
                 else: 
                     playerPos.col -= 1
-                    #self.nextPlayer = self.switchPlayer(player)
                     self.switchPlayer()
                     moveSuccess = True
         elif dir == "RIGHT": 
@@ -154,12 +138,10 @@ class BoardPosition:
                     and playerPos.col == otherPos.col-1):
                     if (playerPos.col < 7):
                         playerPos.col += 2 
-                        #self.nextPlayer = self.switchPlayer(player)
                         self.switchPlayer()
                         moveSuccess = True
                 else:
                     playerPos.col += 1
-                    #self.nextPlayer = self.switchPlayer(player)
                     self.switchPlayer()
                     moveSuccess = True
         return moveSuccess

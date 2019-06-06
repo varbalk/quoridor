@@ -2,7 +2,8 @@
 """
 Created on Mon Mar 25 19:30:17 2019
 
-@author: varba
+@author: varbalk@gmail.com
+@author: daniel.varro@gmail.com
 """
 
 import pygame
@@ -92,7 +93,6 @@ def drawPosition(screen, boardPos, mode):
         drawNextPlayerSquare(screen, 
                              boardPos.position[boardPos.nextPlayer].row, 
                              boardPos.position[boardPos.nextPlayer].col)        
-    #elif mode == "WALL":
     
     if (boardPos.isWhiteWinner()):
         textToDisplay = "Winner: WHITE"
@@ -119,10 +119,6 @@ def drawPosition(screen, boardPos, mode):
 screen = pygame.display.set_mode((display_width,display_height))
 pygame.display.set_caption('Quoridor')
 boardPos = BoardPosition()
-#wall1 = WallPosition(2, 3, "V", "WHITE")
-#boardPos.addWall(wall1)
-#wall2 = WallPosition(3, 4, "H", "BLACK")
-#boardPos.addWall(wall2)
 drawPosition(screen, boardPos, "MOVE")
 
 clock = pygame.time.Clock()

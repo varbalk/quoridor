@@ -3,7 +3,7 @@
 Created on Tue Mar 12 20:40:26 2019
 
 @author: varbalk@gmail.com
-@author: daniel.varrok@gmail.com
+@author: daniel.varro@gmail.com
 
 """
 
