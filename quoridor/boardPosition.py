@@ -61,11 +61,11 @@ class BoardPosition:
                 break
         return found
         
-    def switchPlayer(self, currPlayer):
-        if currPlayer == "W":
-            return "B"
-        elif currPlayer == "B": 
-            return "W"
+    def switchPlayer(self):
+        if self.nextPlayer == "W":
+            self.nextPlayer = "B"
+        elif self.nextPlayer == "B": 
+            self.nextPlayer = "W"
 
     
     def movePlayer(self, dir):
@@ -95,13 +95,15 @@ class BoardPosition:
                         if (playerPos.row > 1):
                             playerPos.row -=2
                             if (not self.isBlackWinner()):
-                                self.nextPlayer = self.switchPlayer(player)
+                                #self.nextPlayer = self.switchPlayer(player)
+                                self.switchPlayer()
                                 moveSuccess = True
                     else:
                         # Regular move otherwise
                         playerPos.row -= 1
                         if (not self.isBlackWinner()):
-                            self.nextPlayer = self.switchPlayer(player)
+                            #self.nextPlayer = self.switchPlayer(player)
+                            self.switchPlayer()
                             moveSuccess = True
         elif dir == "DOWN":
             # Check if white is not at bottom edge of the board
@@ -114,13 +116,15 @@ class BoardPosition:
                     if (playerPos.row > 1):
                         playerPos.row += 2
                         if (not self.isWhiteWinner()):
-                            self.nextPlayer = self.switchPlayer(player)
+                            #self.nextPlayer = self.switchPlayer(player)
+                            self.switchPlayer()
                             moveSuccess = True
                 else:
                     # Regular move otherwise
                     playerPos.row += 1                
                     if (not self.isWhiteWinner()):
-                        self.nextPlayer = self.switchPlayer(player)
+                        #self.nextPlayer = self.switchPlayer(player)
+                        self.switchPlayer()
                         moveSuccess = True
         elif dir == "LEFT":
             # Check if white is not at left edge of the board
@@ -132,11 +136,13 @@ class BoardPosition:
                     and playerPos.col == otherPos.col+1):
                     if (playerPos.col >1):
                         playerPos.col -= 2
-                        self.nextPlayer = self.switchPlayer(player)
+                        #self.nextPlayer = self.switchPlayer(player)
+                        self.switchPlayer()
                         moveSuccess = True
                 else: 
                     playerPos.col -= 1
-                    self.nextPlayer = self.switchPlayer(player)
+                    #self.nextPlayer = self.switchPlayer(player)
+                    self.switchPlayer()
                     moveSuccess = True
         elif dir == "RIGHT": 
             # Check if white is not at right edge of the board
@@ -148,11 +154,13 @@ class BoardPosition:
                     and playerPos.col == otherPos.col-1):
                     if (playerPos.col < 7):
                         playerPos.col += 2 
-                        self.nextPlayer = self.switchPlayer(player)
+                        #self.nextPlayer = self.switchPlayer(player)
+                        self.switchPlayer()
                         moveSuccess = True
                 else:
                     playerPos.col += 1
-                    self.nextPlayer = self.switchPlayer(player)
+                    #self.nextPlayer = self.switchPlayer(player)
+                    self.switchPlayer()
                     moveSuccess = True
         return moveSuccess
 

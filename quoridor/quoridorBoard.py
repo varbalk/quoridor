@@ -72,7 +72,7 @@ def drawNextPlayerSquare(screen, row, col):
 
     
 def drawWall(screen, wall, color):
-    col = wall.column
+    col = wall.col
     row = wall.row
     if (wall.direction == "V"):
         pygame.draw.rect(screen, color, 
@@ -153,15 +153,15 @@ while not crashed:
                                            "H", 
                                            boardPos.nextPlayer)
             elif mode == "WALL":
-#                if event.key == pygame.K_UP:
-#                    #boardPos.moveWall("UP")
-#                elif event.key == pygame.K_DOWN:
-#                    #boardPos.moveWall("DOWN")
-#                elif event.key == pygame.K_LEFT:
-#                   # boardPos.moveWall("LEFT")
-#                elif event.key == pygame.K_RIGHT:
-#                    #boardPos.moveWall( "RIGHT")
-                if event.key == pygame.K_f:
+                if event.key == pygame.K_UP and newWall.row > 0:
+                    newWall.row -=1
+                elif event.key == pygame.K_DOWN and newWall.row < 7:
+                    newWall.row +=1
+                elif event.key == pygame.K_LEFT and newWall.col > 0:
+                    newWall.col -=1
+                elif event.key == pygame.K_RIGHT and newWall.col < 7:
+                    newWall.col +=1
+                elif event.key == pygame.K_f:
                     if newWall.direction == 'H':
                         newWall.direction = 'V'
                     else:
@@ -170,6 +170,12 @@ while not crashed:
                 elif event.key == pygame.K_w:
                     mode = "MOVE"
                     newWall = None
+                elif event.key == pygame.K_SPACE:
+                    notOverlapping = boardPos.addWall(newWall)
+                    if notOverlapping:
+                        boardPos.switchPlayer()
+                        mode = "MOVE"
+                        newWall = None
                     
         # Draw the board position and the pending wall
         drawPosition(screen, boardPos, mode)
