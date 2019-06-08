@@ -13,6 +13,7 @@ class BoardPosition:
     def __init__(self):
         self.walls = [];
         self.position = {'W': Position(0,4), 'B' : Position(8,4) }
+        self.numOfWalls = {'W': 10, 'B' : 10 } 
         self.nextPlayer = 'W'
     """    
     def printBoard(self):
@@ -30,25 +31,30 @@ class BoardPosition:
     def addWall(self, wall):
         if (not wall.isValidPosition()):
             return False
-        notOverlapping = True;
+        success = True;
         for nextWall in self.walls:
             if wall.isOverlapping(nextWall):
-                notOverlapping = False;
-        if notOverlapping:
+                success = False;
+                break
+        if success and self.numOfWalls[self.nextPlayer] >0:
             self.walls.append(wall);
-        return notOverlapping
+            self.numOfWalls[self.nextPlayer] -=1;
+        else:
+            success = False;
+        return success
 
     def isThereWall(self, aRow, aCol, wallDir):
         found = False
         for wall in self.walls:
-            if (wallDir == "H" and wall.row == aRow and 
-                (wall.col == aCol or wall.col == aCol-1)):
-                found = True
-                break
-            elif (wallDir == "V" and wall.col == aCol and 
-                (wall.row == aRow or wall.row == aRow-1)):
-                found = True
-                break
+            if wallDir == wall.direction: 
+                if (wallDir == "H" and wall.row == aRow and 
+                    (wall.col == aCol or wall.col == aCol-1)):
+                    found = True
+                    break
+                elif (wallDir == "V" and wall.col == aCol and 
+                    (wall.row == aRow or wall.row == aRow-1)):
+                    found = True
+                    break
         return found
         
     def switchPlayer(self):

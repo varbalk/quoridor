@@ -32,12 +32,13 @@ def text_objects(text, font):
     textSurface = font.render(text, True, blackColor)
     return textSurface, textSurface.get_rect()
 
-def displayText(screen, text):
+def displayText(screen, text, centerWidth, centerHeight):
     largeText = pygame.font.Font('freesansbold.ttf',18)
     TextSurf, TextRect = text_objects(text, largeText)
-    TextRect.center = (display_width - 130,(display_height/2)-10)
+    TextRect.center = (centerWidth, centerHeight)
     screen.blit(TextSurf, TextRect)
-    
+
+#display_width - 130,(display_height/2)-10    
 def drawBoard(screen):
     screen.fill(bgColor)
     pygame.draw.rect(screen, tileColor2, 
@@ -108,7 +109,11 @@ def drawPosition(screen, boardPos, mode):
         textToDisplay = "Wall for BLACK"   
     else:
         textToDisplay = ""   
-    displayText(screen, textToDisplay)
+    displayText(screen, textToDisplay, display_width - 130, (display_height/2)-10)
+    displayText(screen, "Walls (WHITE): " + str(boardPos.numOfWalls['W']),  
+                display_width - 130, 40)
+    displayText(screen, "Walls (BLACK): " + str(boardPos.numOfWalls['B']),  
+                display_width - 130, display_height - 40)    
     drawPlayer(screen, boardPos.position['W'].row, boardPos.position['W'].col, 'W')
     drawPlayer(screen, boardPos.position['B'].row, boardPos.position['B'].col, 'B')
     for wall in boardPos.walls:
@@ -141,7 +146,8 @@ while not crashed:
                     boardPos.movePlayer("LEFT")
                 elif event.key == pygame.K_RIGHT:
                     boardPos.movePlayer( "RIGHT")
-                elif event.key == pygame.K_w:
+                elif (event.key == pygame.K_w and 
+                      boardPos.numOfWalls[boardPos.nextPlayer] >0):
                     mode = "WALL"
                     initPosition = boardPos.position[boardPos.nextPlayer]
                     newWall = WallPosition(initPosition.row, 

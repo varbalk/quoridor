@@ -15,7 +15,7 @@ class WallPosition:
         self.player = player;
         
     def isValidPosition(self):
-        if self.row >= 0 and self.row <8 and self.col > 0 and self.col <8:
+        if self.row >= 0 and self.row <8 and self.col >= 0 and self.col <8:
             return True
         else:
             return False
