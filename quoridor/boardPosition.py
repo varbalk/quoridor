@@ -86,28 +86,30 @@ class BoardPosition:
             if (playerPos.row > 0 and 
                 not self.isThereWall(playerPos.row-1, playerPos.col, "H")):
                     # Check if other player is jumped
-                    if (playerPos.col == otherPos.col
-                        and playerPos.row == otherPos.row+1 ):
-                        if (playerPos.row > 1):
-                            playerPos.row -=2
-                            if (not self.isBlackWinner()):
-                                self.switchPlayer()
-                                moveSuccess = True
-                    else:
-                        # Regular move otherwise
-                        playerPos.row -= 1
+                if (playerPos.col == otherPos.col
+                    and playerPos.row == otherPos.row+1): 
+                    if (playerPos.row > 1 
+                        and not self.isThereWall(playerPos.row-2, playerPos.col, "H") ):
+                        playerPos.row -=2
                         if (not self.isBlackWinner()):
                             self.switchPlayer()
                             moveSuccess = True
+                else:
+                    # Regular move otherwise
+                    playerPos.row -= 1
+                    if (not self.isBlackWinner()):
+                        self.switchPlayer()
+                        moveSuccess = True
         elif dir == "DOWN":
             # Check if white is not at bottom edge of the board
             # Check if there is no wall below
             if (playerPos.row < 8 and 
                 not self.isThereWall(playerPos.row, playerPos.col, "H")):
                 # Check if other player is jumped
-                if (playerPos.col == otherPos.col
+                if (playerPos.col == otherPos.col 
                     and playerPos.row == otherPos.row-1):
-                    if (playerPos.row > 1):
+                    if (playerPos.row < 7 
+                        and not self.isThereWall(playerPos.row+1, playerPos.col, "H")):
                         playerPos.row += 2
                         if (not self.isWhiteWinner()):
                             self.switchPlayer()
@@ -124,9 +126,10 @@ class BoardPosition:
             if (playerPos.col > 0 and 
                 not self.isThereWall(playerPos.row, playerPos.col-1, "V")):
                 # Check if other player is jumped
-                if (playerPos.row == otherPos.row
+                if ( playerPos.row == otherPos.row
                     and playerPos.col == otherPos.col+1):
-                    if (playerPos.col >1):
+                    if (playerPos.col >1 
+                        and not self.isThereWall(playerPos.row, playerPos.col-2, "V")):
                         playerPos.col -= 2
                         self.switchPlayer()
                         moveSuccess = True
@@ -140,9 +143,10 @@ class BoardPosition:
             if (playerPos.col < 8 and 
                 not self.isThereWall(playerPos.row, playerPos.col, "V")):
                 # Check if other player is jumped
-                if (playerPos.row == otherPos.row 
+                if ( playerPos.row == otherPos.row 
                     and playerPos.col == otherPos.col-1):
-                    if (playerPos.col < 7):
+                    if (playerPos.col < 7 
+                        and not self.isThereWall(playerPos.row, playerPos.col+1, "V") ):
                         playerPos.col += 2 
                         self.switchPlayer()
                         moveSuccess = True
